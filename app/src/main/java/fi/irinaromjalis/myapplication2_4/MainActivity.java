@@ -5,66 +5,54 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView Result;
-    int step = 7;
-    int start = 1;
+    private TextView result;
 
-    int min = -15;
-    int max = 21;
+    Counter count = new Counter(-15, 20, 0, 7);
 
-    Button plus;
-    Button minus;
-    Button reset;
+    private Button plus, minus, reset;
 
-    private int value = start;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Result = (TextView) findViewById(R.id.result);
-        String res = String.valueOf(value);
-        Result.setText(res);
         plus = (Button) findViewById(R.id.plus);
-        minus = (Button)findViewById(R.id.minus);
-        reset = (Button)findViewById(R.id.reset);
+        minus = (Button) findViewById(R.id.minus);
+        reset = (Button) findViewById(R.id.reset);
+        result = findViewById(R.id.result);
 
-        plus.setOnClickListener(this::increment);
-        minus.setOnClickListener(this::decrement);
-        reset.setOnClickListener(this::reset);
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int value = count.increment(Integer.parseInt(result.getText().toString()));
+                result.setText(value+ "");
+            }
+        });
+
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int value = count.decrement(Integer.parseInt(result.getText().toString()));
+                result.setText(value + "");
+            }
+        });
+
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int value = count.reset();
+
+                result.setText(value + "");
+            }
+        });
     }
 
-    public void increment(View view) {
-        int newValue = value + step;
-        if(newValue >= max){
-            Result.setText(String.valueOf(max));
-            return;
-        }
-        value = newValue;
-        String res = String.valueOf(value);
-        Result.setText(res);
-    }
 
-    public void decrement(View view) {
-        int newValue = value - step;
-        if(newValue < min ){
-            Result.setText(String.valueOf(min));
-            return;
-        }
-
-        value = newValue;
-        String res = String.valueOf(value);
-        Result.setText(res);
-    }
-
-    public void reset(View view) {
-        value = start;
-        String res = String.valueOf(value);
-        Result.setText(res);
-    }
 }
-
-
